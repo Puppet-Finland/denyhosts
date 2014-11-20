@@ -28,11 +28,11 @@
 #
 # == Examples
 #
-# class { 'denyhosts':
-#   allowed_hosts => ['localhost', 'mycomputer.domain.com'],
-#   email => '',
-#   monitor_email => 'monit@domain.com',
-# }
+#   class { 'denyhosts':
+#       allowed_hosts => ['localhost', 'mycomputer.domain.com'],
+#       email => '',
+#       monitor_email => 'monit@domain.com',
+#   }
 #
 # == Authors
 #
@@ -40,8 +40,7 @@
 #
 # == License
 #
-# BSD-license
-# See COPYING.txt
+# BSD-license. See COPYING.txt.
 # 
 class denyhosts(
     $deny_threshold_valid = 10,
