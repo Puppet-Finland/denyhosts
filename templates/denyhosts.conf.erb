@@ -7,8 +7,8 @@
 # THESE SETTINGS DIFFER DEPENDING ON THE OPERATING SYSTEM
 #
 
-SECURE_LOG = <%= scope.lookupvar('denyhosts::params::secure_log') %>
-LOCK_FILE = <%= scope.lookupvar('denyhosts::params::pidfile') %>
+SECURE_LOG = <%= scope['denyhosts::params::secure_log'] %>
+LOCK_FILE = <%= scope['denyhosts::params::pidfile'] %>
 
 HOSTS_DENY = /etc/hosts.deny
 

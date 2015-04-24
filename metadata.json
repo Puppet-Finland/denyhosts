@@ -1,0 +1,13 @@
+{
+  "name": "puppetfinland-denyhosts",
+  "version": "0.5.1",
+  "author": "Puppet-Finland team",
+  "license": "BSD license",
+  "summary": "Setup denyhosts",
+  "source": "https://github.com/Puppet-Finland/denyhosts.git",
+  "project_page": "https://github.com/Puppet-Finland/denyhosts",
+  "dependencies": [
+    { "name": "puppetfinland/monit", "version_requirement": ">= 0.5.0" },
+    { "name": "puppetfinland/os", "version_requirement": ">= 0.5.6" } 
+  ]
+}

@@ -3,21 +3,30 @@
 #
 # Defines some variables based on the operating system
 #
+# The operating system support for denyhosts is getting spotty, because it used 
+# to based on tcpwrappers which is losing support in many daemons including 
+# sshd. Development versions of denyhosts are moving towards iptables-based 
+# blocking:
+#
+# <https://github.com/denyhosts/denyhosts>
+#
+# The iptables migration will probably bring denyhosts back to operating system 
+# repositories sooner or later.
+#
 class denyhosts::params {
 
-   # On some platforms the init script does not have a "status" target,
-   # which means config change does not trigger a service restart without
-   # "hastatus => false"
-   case $::lsbdistcodename {
-        'squeeze': {
-            $service_hasstatus = 'false'
-        }
-        'lucid': {
-            $service_hasstatus = 'false'
-        }
-        default: {
-            $service_hasstatus = 'true'
-        }
+    include ::os::params
+
+    # On some platforms the init script does not have a "status" target, which 
+    # means config change does not trigger a service restart without "hastatus 
+    # => false". This block is also used to cause failure on distributions where 
+    # this module will not work.
+    case $::lsbdistcodename {
+        'trusty':   { fail("Unsupported distribution ${::lsbdistcodename}") }
+        'jessie':   { fail("Unsupported distribution ${::lsbdistcodename}") }
+        'squeeze':  { $service_hasstatus = false }
+        'lucid':    { $service_hasstatus = false }
+        default:    { $service_hasstatus = true }
     }
 
     case $::osfamily {
@@ -25,28 +34,17 @@ class denyhosts::params {
             $pidfile = '/var/lock/subsys/denyhosts'
             $secure_log = '/var/log/secure'
             $service_name = 'denyhosts'
-
-            if $::operatingsystem == 'Fedora' {
-                $service_start = "/usr/bin/systemctl start ${service_name}.service"
-                $service_stop = "/usr/bin/systemctl stop ${service_name}.service"
-            } else {
-                $service_start = "/sbin/service $service_name start"
-                $service_stop = "/sbin/service $service_name stop"
-            }
         }
         'Debian': {
             $pidfile = '/var/run/denyhosts.pid'
             $secure_log = '/var/log/auth.log'
             $service_name = 'denyhosts'
-            $service_start = "/usr/sbin/service $service_name start"
-            $service_stop = "/usr/sbin/service $service_name stop"
         }
         default: {
-            $pidfile = '/var/run/denyhosts.pid'
-            $secure_log = '/var/log/auth.log'
-            $service_name = 'denyhosts'
-            $service_start = "/usr/sbin/service $service_name start"
-            $service_stop = "/usr/sbin/service $service_name stop"
+            fail("Unsupported operating system ${::osfamily}")
         }
     }
+
+    $service_start = "${::os::params::service_cmd} ${service_name} start"
+    $service_stop = "${::os::params::service_cmd} ${service_name} stop"
 }

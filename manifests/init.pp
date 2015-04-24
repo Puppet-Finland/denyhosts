@@ -6,6 +6,9 @@
 #
 # == Parameters
 #
+# [*manage*]
+#   Whether to manage denyhosts with Puppet or not. Valid values are 'yes' 
+#   (default) and 'no'.
 # [*deny_threshold_valid*]
 #   Deny valid users from retrying ssh authentication after this many failed
 #   logins
@@ -42,7 +45,9 @@
 #
 # BSD-license. See COPYING.txt.
 # 
-class denyhosts(
+class denyhosts
+(
+    $manage = 'yes',
     $deny_threshold_valid = 10,
     $deny_threshold_invalid = 5,
     $deny_threshold_restricted = 5,
@@ -50,27 +55,26 @@ class denyhosts(
     $allowed_hosts = ['localhost'],
     $email = $::servermonitor,
     $monitor_email = $::servermonitor
-    )
+)
 {
 
-# Rationale for this is explained in init.pp of the sshd module
-if hiera('manage_denyhosts', 'true') != 'false' {
+if $manage == 'yes' {
 
-    include denyhosts::install
+    include ::denyhosts::install
 
-    class { 'denyhosts::config':
-        deny_threshold_valid => $deny_threshold_valid,
-        deny_threshold_invalid => $deny_threshold_invalid,
+    class { '::denyhosts::config':
+        deny_threshold_valid      => $deny_threshold_valid,
+        deny_threshold_invalid    => $deny_threshold_invalid,
         deny_threshold_restricted => $deny_threshold_restricted,
-        deny_threshold_root => $deny_threshold_root,
-        allowed_hosts => $allowed_hosts,
-        email => $email,
+        deny_threshold_root       => $deny_threshold_root,
+        allowed_hosts             => $allowed_hosts,
+        email                     => $email,
     }
 
-    include denyhosts::service
+    include ::denyhosts::service
 
     if tagged('monit') {
-        class { 'denyhosts::monit':
+        class { '::denyhosts::monit':
             monitor_email => $monitor_email,
         }
     }

@@ -3,10 +3,10 @@
 #
 # Installs denyhosts package
 #
-class denyhosts::install {
+class denyhosts::install inherits denyhosts::params {
 
     package { 'denyhosts-denyhosts':
-        name => 'denyhosts',
         ensure => installed,
+        name   => 'denyhosts',
     }
 }
