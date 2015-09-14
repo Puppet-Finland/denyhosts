@@ -12,6 +12,6 @@
 # rpc.mountd (the NFS mount daemon). See portmap(8) and rpc.mountd(8)
 # for further information.
 #
-<% allowed_hosts.each do |val| -%>
+<% @allowed_hosts.each do |val| -%>
 ALL: <%= val %>
 <% end %>
