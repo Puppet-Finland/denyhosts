@@ -11,6 +11,7 @@ class denyhosts::monit
 {
 
     monit::fragment { 'denyhosts-denyhosts.monit':
+        basename   => 'denyhosts',
         modulename => 'denyhosts',
     }
 }
